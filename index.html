@@ -1,321 +1,498 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dua Pharma — Control Gateway</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dua Pharma Plus — Staff Portal</title>
+  <style>
+    :root {
+      --teal:       #0B5F7A;
+      --teal-dark:  #08455A;
+      --teal-lt:    #1A83A8;
+      --teal-faint: #E8F4F8;
+      --amber:      #C96E1A;
+      --amber-faint:#FDF0E3;
+      --green:      #1F9E65;
+      --green-faint:#E5F5EE;
+      --bg:         #EDF2F6;
+      --surface:    #FFFFFF;
+      --border:     #D5E2EB;
+      --text-1:     #0E2230;
+      --text-2:     #4F6A7A;
+      --text-3:     #96AEBA;
+      --online:     #1F9E65;
+      --offline:    #C0392B;
+      --checking:   #C96E1A;
+    }
 
-<!-- Premium Cyber-Style Typography -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<style>
-:root {
-  --font-sans: 'Plus Jakarta Sans', sans-serif;
-  --font-display: 'Space Grotesk', sans-serif;
-  
-  /* Futuristic Tech Palette */
-  --primary-glow: #00f2fe;
-  --teal-primary: #00cbcb;
-  --teal-dark: #004d4d;
-  --bg-gradient: radial-gradient(circle at 50% 50%, #0d1527 0%, #040814 100%);
-  
-  --glass-bg: rgba(13, 25, 47, 0.55);
-  --glass-border: rgba(0, 242, 254, 0.15);
-  --glass-border-hover: rgba(0, 242, 254, 0.4);
-  
-  --text-main: #f1f5f9;
-  --text-muted: #94a3b8;
-  
-  --radius-xl: 24px;
-  --radius-md: 12px;
-  --transition-cubic: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 60%, var(--teal-lt) 100%);
+      padding: 0 36px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(8,69,90,0.3);
+    }
 
-body {
-  font-family: var(--font-sans);
-  background: var(--bg-gradient);
-  color: var(--text-main);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  position: relative;
-  padding: 24px;
-}
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
-/* 🕸️ INTERACTIVE BACKGROUND CANVAS */
-#particleCanvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-}
+    .brand-mark {
+      width: 42px; height: 42px;
+      background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
 
-/* 💎 GLASSMORPHIC HUB CONTAINER */
-.gateway-container {
-  position: relative;
-  z-index: 10;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-xl);
-  padding: 48px 40px;
-  max-width: 480px;
-  width: 100%;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 
-              0 0 40px rgba(0, 242, 254, 0.05);
-  text-align: center;
-  transition: var(--transition-cubic);
-}
+    .brand-text h1 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.2px;
+      line-height: 1.2;
+    }
 
-.gateway-container:hover {
-  border-color: rgba(0, 242, 254, 0.25);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 
-              0 0 50px rgba(0, 242, 254, 0.1);
-}
+    .brand-text span {
+      font-size: 10.5px;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
 
-/* 🛡️ INNOVATIVE BRAND ORB */
-.brand-orb {
-  width: 80px;
-  height: 80px;
-  background: radial-gradient(circle at 30% 30%, rgba(0, 242, 254, 0.2), transparent);
-  border: 1px solid var(--primary-glow);
-  border-radius: 50%;
-  margin: 0 auto 28px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  position: relative;
-  box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
-  animation: float 4s ease-in-out infinite;
-}
+    .header-right {
+      text-align: right;
+    }
 
-.brand-orb::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  border: 1px dashed rgba(0, 242, 254, 0.4);
-  animation: rotate 12s linear infinite;
-}
+    #clock {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
+    #dateline {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 3px;
+      letter-spacing: 0.3px;
+    }
 
-@keyframes rotate {
-  100% { transform: rotate(360deg); }
-}
+    /* ── GREETING STRIP ── */
+    .strip {
+      background: var(--teal-lt);
+      padding: 9px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-h1 {
-  font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  margin-bottom: 10px;
-  background: linear-gradient(135deg, #ffffff 0%, #a5f3fc 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+    #greeting {
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.82);
+      font-weight: 500;
+    }
 
-.subtitle {
-  color: var(--text-muted);
-  font-size: 14px;
-  line-height: 1.6;
-  margin-bottom: 36px;
-  font-weight: 400;
-}
+    .net-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+    }
 
-/* ⚡ INTERACTIVE INTERFACE LINK BLOCKS */
-.nav-group {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+    .net-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+    }
+    .net-dot.online  { background: #5DEBA3; }
+    .net-dot.offline { background: #FF7B72; }
 
-.nav-link {
-  font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 600;
-  padding: 18px 24px;
-  border-radius: var(--radius-md);
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: var(--transition-cubic);
-  position: relative;
-  overflow: hidden;
-}
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      padding: 40px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-/* POS Terminal Button Style */
-.nav-link.pos-btn {
-  background: linear-gradient(135deg, rgba(0, 242, 254, 0.15) 0%, rgba(0, 203, 203, 0.05) 100%);
-  color: var(--primary-glow);
-  border: 1px solid var(--glass-border);
-}
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
 
-.nav-link.pos-btn:hover {
-  border-color: var(--primary-glow);
-  background: linear-gradient(135deg, rgba(0, 242, 254, 0.25) 0%, rgba(0, 203, 203, 0.1) 100%);
-  transform: translateX(4px);
-  box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
-}
+    /* ── CARDS ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      width: 100%;
+      max-width: 880px;
+    }
 
-/* Audit Board Button Style */
-.nav-link.audit-btn {
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--text-main);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+      cursor: pointer;
+    }
 
-.nav-link.audit-btn:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.07);
-  transform: translateX(4px);
-}
+    .card:hover {
+      box-shadow: 0 10px 32px rgba(11,95,122,0.14);
+      transform: translateY(-3px);
+    }
 
-.link-title {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
+    .card-top-bar {
+      height: 4px;
+    }
 
-.link-icon {
-  font-size: 20px;
-}
+    .card-inner {
+      padding: 26px 22px 18px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
 
-.arrow-action {
-  font-size: 16px;
-  opacity: 0.5;
-  transition: var(--transition-cubic);
-}
+    .module-icon {
+      width: 50px; height: 50px;
+      border-radius: 13px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      margin-bottom: 18px;
+      flex-shrink: 0;
+    }
 
-.nav-link:hover .arrow-action {
-  opacity: 1;
-  transform: translateX(3px);
-}
-</style>
+    .module-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .card h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-1);
+      margin-bottom: 9px;
+      line-height: 1.25;
+    }
+
+    .card p {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .card-footer {
+      padding: 0 22px 20px;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 16px;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 13px;
+    }
+
+    .sys-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--text-3);
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+
+    .sys-dot.online   { background: var(--online); }
+    .sys-dot.offline  { background: var(--offline); }
+    .sys-dot.checking { background: var(--checking); }
+
+    .status-text {
+      font-size: 11.5px;
+      color: var(--text-3);
+      font-weight: 500;
+    }
+    .status-text.online  { color: var(--online); }
+    .status-text.offline { color: var(--offline); }
+
+    .launch-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 12px 0;
+      border-radius: 10px;
+      border: none;
+      font-size: 13.5px;
+      font-weight: 600;
+      font-family: inherit;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      transition: filter 0.15s, opacity 0.15s;
+      letter-spacing: 0.2px;
+    }
+
+    .launch-btn:hover  { filter: brightness(1.09); }
+    .launch-btn:active { filter: brightness(0.95); }
+
+    .arrow { font-style: normal; }
+
+    /* ── POS — teal ── */
+    .card.pos .card-top-bar { background: var(--teal); }
+    .card.pos .module-icon  { background: var(--teal-faint); }
+    .card.pos .module-label { color: var(--teal); }
+    .card.pos .launch-btn   { background: var(--teal); color: #fff; }
+
+    /* ── AUDIT — amber ── */
+    .card.audit .card-top-bar { background: var(--amber); }
+    .card.audit .module-icon  { background: var(--amber-faint); }
+    .card.audit .module-label { color: var(--amber); }
+    .card.audit .launch-btn   { background: var(--amber); color: #fff; }
+
+    /* ── CLOSING — green ── */
+    .card.closing .card-top-bar { background: var(--green); }
+    .card.closing .module-icon  { background: var(--green-faint); }
+    .card.closing .module-label { color: var(--green); }
+    .card.closing .launch-btn   { background: var(--green); color: #fff; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 18px 16px;
+      font-size: 11px;
+      color: var(--text-3);
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      margin-top: 8px;
+    }
+
+    footer strong { color: var(--text-2); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      header { padding: 0 20px; height: 64px; }
+      .strip { padding: 8px 20px; }
+      .cards { grid-template-columns: 1fr; max-width: 400px; }
+      main { padding: 28px 16px 16px; }
+      #clock { font-size: 18px; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- Dynamic Particle Web Network Structure Background -->
-<canvas id="particleCanvas"></canvas>
+<!-- ── HEADER ── -->
+<header>
+  <div class="brand">
+    <div class="brand-mark">⚕</div>
+    <div class="brand-text">
+      <h1>Dua Pharma Plus</h1>
+      <span>Staff Portal · Manga Mandi</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div id="clock">00:00:00</div>
+    <div id="dateline">Loading…</div>
+  </div>
+</header>
 
-<div class="gateway-container">
-  <!-- Interactive Identity Orb -->
-  <div class="brand-orb">🛡️</div>
-  
-  <!-- Content Block -->
-  <h1>Dua Pharma Gateway</h1>
-  <p class="subtitle">Securely access network modules. Select your destination terminal below.</p>
-  
-  <!-- Direct Navigation to live URLs -->
-  <div class="nav-group">
-    <a href="https://pos.duapharma.com" class="nav-link pos-btn">
-      <span class="link-title">
-        <span class="link-icon">🛒</span>
-        <span>POS Terminal</span>
-      </span>
-      <span class="arrow-action">→</span>
-    </a>
-    
-    <a href="https://random.duapharma.com" class="nav-link audit-btn">
-      <span class="link-title">
-        <span class="link-icon">📊</span>
-        <span>Audit Dashboard</span>
-      </span>
-      <span class="arrow-action">→</span>
-    </a>
+<!-- ── GREETING STRIP ── -->
+<div class="strip">
+  <span id="greeting">Welcome to Dua Pharma Staff Portal</span>
+  <div class="net-badge">
+    <div class="net-dot" id="net-dot"></div>
+    <span id="net-label">Checking network…</span>
   </div>
 </div>
 
-<!-- 🧠 LIGHTWEIGHT LIVE INTERACTIVE BACKGROUND SCRIPT -->
+<!-- ── MAIN ── -->
+<main>
+  <div class="section-label">Select a Module to Launch</div>
+
+  <div class="cards">
+
+    <!-- POS TERMINAL -->
+    <div class="card pos">
+      <div class="card-top-bar"></div>
+      <div class="card-inner">
+        <div class="module-icon">🖥️</div>
+        <div class="module-label">Billing · Sales</div>
+        <h2>POS Terminal</h2>
+        <p>Counter billing, sales transactions, and customer invoices for daily pharmacy operations.</p>
+      </div>
+      <div class="card-footer">
+        <div class="divider"></div>
+        <div class="status-row">
+          <div class="sys-dot checking" id="pos-dot"></div>
+          <span class="status-text" id="pos-status">Checking system…</span>
+        </div>
+        <a href="http://pos.duapharma.com" class="launch-btn">
+          Open POS Terminal <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- INVENTORY AUDIT -->
+    <div class="card audit">
+      <div class="card-top-bar"></div>
+      <div class="card-inner">
+        <div class="module-icon">📦</div>
+        <div class="module-label">Stock · Analytics</div>
+        <h2>Inventory Audit</h2>
+        <p>Stock verification, inventory counts, and audit logs for medicines and pharmacy supplies.</p>
+      </div>
+      <div class="card-footer">
+        <div class="divider"></div>
+        <div class="status-row">
+          <div class="sys-dot checking" id="audit-dot"></div>
+          <span class="status-text" id="audit-status">Checking system…</span>
+        </div>
+        <a href="http://random.duapharma.com" class="launch-btn">
+          Open Inventory Audit <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- DAY CLOSING -->
+    <div class="card closing">
+      <div class="card-top-bar"></div>
+      <div class="card-inner">
+        <div class="module-icon">🏦</div>
+        <div class="module-label">Cash · EOD Reports</div>
+        <h2>Day Closing</h2>
+        <p>End-of-day cash reconciliation, sale summaries, and closing reports for pharmacy handover.</p>
+      </div>
+      <div class="card-footer">
+        <div class="divider"></div>
+        <div class="status-row">
+          <div class="sys-dot checking" id="closing-dot"></div>
+          <span class="status-text" id="closing-status">Checking system…</span>
+        </div>
+        <a href="http://closing.duapharma.com" class="launch-btn">
+          Open Day Closing <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <strong>Dua Pharma Plus</strong> &mdash; Internal Staff Use Only &mdash; Manga Mandi, Lahore &mdash; www.duapharma.com
+</footer>
+
 <script>
-const canvas = document.getElementById('particleCanvas');
-const ctx = canvas.getContext('2d');
+  /* ── CLOCK & DATE ── */
+  const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-let particles = [];
-const particleCount = 40;
+  function tick() {
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2,'0');
+    const mm = String(now.getMinutes()).padStart(2,'0');
+    const ss = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('clock').textContent = `${hh}:${mm}:${ss}`;
+    document.getElementById('dateline').textContent =
+      `${DAYS[now.getDay()]}, ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
 
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-
-class Particle {
-  constructor() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.vx = (Math.random() - 0.5) * 0.4;
-    this.vy = (Math.random() - 0.5) * 0.4;
-    this.radius = Math.random() * 2 + 1;
+    const h = now.getHours();
+    const greet = h < 5  ? 'Good Night'      :
+                  h < 12 ? 'Good Morning'     :
+                  h < 17 ? 'Good Afternoon'   :
+                  h < 21 ? 'Good Evening'     : 'Good Night';
+    document.getElementById('greeting').textContent = `${greet} — Dua Pharma Staff Portal`;
   }
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
-    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-  }
-  draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0, 242, 254, 0.25)';
-    ctx.fill();
-  }
-}
+  tick();
+  setInterval(tick, 1000);
 
-for (let i = 0; i < particleCount; i++) {
-  particles.push(new Particle());
-}
-
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Draw connecting laser lines
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i + 1; j < particles.length; j++) {
-      const dx = particles[i].x - particles[j].x;
-      const dy = particles[i].y - particles[j].y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      
-      if (dist < 150) {
-        ctx.beginPath();
-        ctx.moveTo(particles[i].x, particles[i].y);
-        ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = `rgba(0, 242, 254, ${0.1 * (1 - dist / 150)})`;
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
-      }
+  /* ── NETWORK STATUS ── */
+  function updateNet() {
+    const online = navigator.onLine;
+    const dot   = document.getElementById('net-dot');
+    const label = document.getElementById('net-label');
+    if (online) {
+      dot.className   = 'net-dot online';
+      label.textContent = 'Network Connected';
+    } else {
+      dot.className   = 'net-dot offline';
+      label.textContent = 'No Network — Local Mode';
     }
   }
-  
-  particles.forEach(p => {
-    p.update();
-    p.draw();
-  });
-  
-  requestAnimationFrame(animate);
-}
-animate();
+  updateNet();
+  window.addEventListener('online',  updateNet);
+  window.addEventListener('offline', updateNet);
+
+  /* ── SYSTEM STATUS CHECKER ── */
+  async function checkSystem(host, dotId, labelId) {
+    const dot   = document.getElementById(dotId);
+    const label = document.getElementById(labelId);
+
+    dot.className   = 'sys-dot checking';
+    label.textContent = 'Checking…';
+    label.className   = 'status-text';
+
+    try {
+      const ctrl    = new AbortController();
+      const timeout = setTimeout(() => ctrl.abort(), 4000);
+      await fetch('http://' + host, { method: 'HEAD', mode: 'no-cors', signal: ctrl.signal });
+      clearTimeout(timeout);
+      dot.className     = 'sys-dot online';
+      label.textContent = '● System Online';
+      label.className   = 'status-text online';
+    } catch {
+      dot.className     = 'sys-dot offline';
+      label.textContent = '● Offline / Unreachable';
+      label.className   = 'status-text offline';
+    }
+  }
+
+  function checkAll() {
+    checkSystem('pos.duapharma.com',     'pos-dot',     'pos-status');
+    checkSystem('random.duapharma.com',  'audit-dot',   'audit-status');
+    checkSystem('closing.duapharma.com', 'closing-dot', 'closing-status');
+  }
+
+  checkAll();
+  setInterval(checkAll, 60000); // re-check every minute
 </script>
 
 </body>
