@@ -66,6 +66,12 @@
       user-select: none;
     }
 
+    /* Allow text selection/copy inside the loaded apps (invoice numbers, etc.) */
+    .app-iframe {
+      user-select: auto;
+      -webkit-user-select: auto;
+    }
+
     /* ── APP HEADER & TABS ── */
     header {
       background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 60%, var(--teal-lt) 100%);
@@ -281,9 +287,112 @@
       padding-top: calc(12px + env(safe-area-inset-top, 0px));
       padding-bottom: 4px; /* Optional: gives a little breathing room below the tabs */
     }
+
+    /* ── PIN GATE SPLASH ── */
+    #pin-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 60%, var(--teal-lt) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      padding: 24px;
+      text-align: center;
+    }
+    #pin-gate.hidden { display: none; }
+
+    .gate-logo {
+      width: 84px; height: 84px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 42px;
+      backdrop-filter: blur(4px);
+      box-shadow: inset 0 2px 4px rgba(255,255,255,0.1);
+    }
+    .gate-title { color: #fff; font-size: 17px; font-weight: 700; letter-spacing: 0.3px; }
+    .gate-sub { color: rgba(255,255,255,0.65); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; margin-top: -16px; }
+
+    #pin-dots { display: flex; gap: 14px; }
+    .pin-dot {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.5);
+      background: transparent;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .pin-dot.filled { background: #fff; transform: scale(1.1); }
+    .pin-dot.error { border-color: var(--offline); background: var(--offline); }
+
+    #pin-gate.shake #pin-dots { animation: shake 0.4s; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    .pin-keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 64px);
+      gap: 14px;
+    }
+    .pin-key {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-size: 22px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      user-select: none;
+    }
+    .pin-key:active { background: rgba(255,255,255,0.25); transform: scale(0.95); }
+    .pin-key.empty { visibility: hidden; }
+
+    .gate-status {
+      min-height: 18px;
+      color: rgba(255,255,255,0.75);
+      font-size: 13px; font-weight: 600;
+    }
+    .gate-status.error-text { color: #ffd2cc; }
   </style>
 </head>
 <body>
+
+<!-- ── PIN GATE SPLASH ── -->
+<div id="pin-gate">
+  <div class="gate-logo">⚕</div>
+  <div>
+    <div class="gate-title">Fazal Din's Pharma Plus</div>
+    <div class="gate-sub">Staff Workspace</div>
+  </div>
+  <div id="pin-dots">
+    <div class="pin-dot"></div>
+    <div class="pin-dot"></div>
+    <div class="pin-dot"></div>
+    <div class="pin-dot"></div>
+  </div>
+  <div class="gate-status" id="gate-status">Enter PIN</div>
+  <div class="pin-keypad" id="pin-keypad">
+    <div class="pin-key" data-key="1">1</div>
+    <div class="pin-key" data-key="2">2</div>
+    <div class="pin-key" data-key="3">3</div>
+    <div class="pin-key" data-key="4">4</div>
+    <div class="pin-key" data-key="5">5</div>
+    <div class="pin-key" data-key="6">6</div>
+    <div class="pin-key" data-key="7">7</div>
+    <div class="pin-key" data-key="8">8</div>
+    <div class="pin-key" data-key="9">9</div>
+    <div class="pin-key empty"></div>
+    <div class="pin-key" data-key="0">0</div>
+    <div class="pin-key" data-key="del">⌫</div>
+  </div>
+</div>
 
 <header>
   <div class="header-top">
@@ -485,7 +594,6 @@
   /* ── SEPARATE EXTERNAL SERVICE WORKER REGISTRATION ── */
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.withCredentials = true;
       navigator.serviceWorker.register('sw.js')
         .then(reg => console.log('Workspace Service Worker Online:', reg.scope))
         .catch(err => console.error('PWA Core Initialization Failed:', err));
@@ -558,6 +666,120 @@
   }
   setTimeout(checkAll, 500);
   setInterval(checkAll, 45000); 
+
+  /* ── PIN GATE ── */
+  (function() {
+    // SHA-256 hash of the staff PIN. To change the PIN, compute a new hash
+    // (e.g. in browser console: crypto.subtle.digest('SHA-256', new TextEncoder().encode('1234')))
+    // and replace the value below.
+    const PIN_HASH = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"; // default PIN: 1234
+
+    const UNLOCK_KEY = 'pharmaplus_unlocked';
+    const PIN_LENGTH = 4;
+    const MAX_ATTEMPTS = 3;
+    const COOLDOWN_SECONDS = 30;
+
+    const gate = document.getElementById('pin-gate');
+    const dots = document.querySelectorAll('.pin-dot');
+    const status = document.getElementById('gate-status');
+    const keypad = document.getElementById('pin-keypad');
+
+    let entered = '';
+    let attempts = 0;
+    let cooldownTimer = null;
+
+    // Already unlocked on this device
+    if (localStorage.getItem(UNLOCK_KEY) === 'true') {
+      gate.classList.add('hidden');
+      return;
+    }
+
+    async function sha256(text) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function renderDots() {
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('filled', i < entered.length);
+        dot.classList.remove('error');
+      });
+    }
+
+    function setKeypadEnabled(enabled) {
+      keypad.style.pointerEvents = enabled ? 'auto' : 'none';
+      keypad.style.opacity = enabled ? '1' : '0.4';
+    }
+
+    function startCooldown() {
+      let remaining = COOLDOWN_SECONDS;
+      setKeypadEnabled(false);
+      status.classList.add('error-text');
+      status.textContent = `Too many attempts. Try again in ${remaining}s`;
+
+      cooldownTimer = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) {
+          clearInterval(cooldownTimer);
+          cooldownTimer = null;
+          attempts = 0;
+          status.classList.remove('error-text');
+          status.textContent = 'Enter PIN';
+          setKeypadEnabled(true);
+        } else {
+          status.textContent = `Too many attempts. Try again in ${remaining}s`;
+        }
+      }, 1000);
+    }
+
+    async function checkPin() {
+      const hash = await sha256(entered);
+      if (hash === PIN_HASH) {
+        localStorage.setItem(UNLOCK_KEY, 'true');
+        gate.classList.add('hidden');
+      } else {
+        attempts++;
+        dots.forEach(dot => dot.classList.add('error'));
+        gate.classList.add('shake');
+        setTimeout(() => gate.classList.remove('shake'), 400);
+
+        if (attempts >= MAX_ATTEMPTS) {
+          entered = '';
+          renderDots();
+          startCooldown();
+        } else {
+          status.classList.add('error-text');
+          status.textContent = `Incorrect PIN (${MAX_ATTEMPTS - attempts} attempt${MAX_ATTEMPTS - attempts === 1 ? '' : 's'} left)`;
+          setTimeout(() => {
+            entered = '';
+            renderDots();
+            status.classList.remove('error-text');
+            status.textContent = 'Enter PIN';
+          }, 600);
+        }
+      }
+    }
+
+    keypad.addEventListener('click', (e) => {
+      const key = e.target.closest('.pin-key');
+      if (!key || key.classList.contains('empty')) return;
+      const val = key.getAttribute('data-key');
+
+      if (val === 'del') {
+        entered = entered.slice(0, -1);
+        renderDots();
+        return;
+      }
+
+      if (entered.length < PIN_LENGTH) {
+        entered += val;
+        renderDots();
+        if (entered.length === PIN_LENGTH) {
+          setTimeout(checkPin, 100);
+        }
+      }
+    });
+  })();
 </script>
 
 </body>
