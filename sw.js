@@ -1,25 +1,31 @@
-const CACHE_NAME = 'fazaldins-workspace-v2.2';
+const CACHE_NAME = 'dua-pharma-portal-v2';
 const ASSETS = [
-  'index.html',
-  'manifest.json'
+  './',
+  './index.html',
+  './manifest.json',
+  // Add paths to any local icons or assets here if you have them, e.g.:
+  // './icon-192.png',
+  // './icon-512.png'
 ];
 
-// Installs workspace core dependencies
-self.addEventListener('install', event => {
+// Install Event: Cache the portal layout core assets
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('📦 Dua Pharma Portal: Caching structural shell assets');
       return cache.addAll(ASSETS);
     }).then(() => self.skipWaiting())
   );
 });
 
-// Clears obsolete architectural builds on asset refresh
-self.addEventListener('activate', event => {
+// Activate Event: Clean up older cache versions if updated
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(keys => {
+    caches.keys().then((keys) => {
       return Promise.all(
-        keys.map(key => {
+        keys.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('🧹 Dua Pharma Portal: Removing old cache storage', key);
             return caches.delete(key);
           }
         })
@@ -28,26 +34,18 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Cache-first runtime engine for workspace wrapper shell
-self.addEventListener('fetch', event => {
-  // Do not intercept mutations heading to external subdomains like Supabase/Dropbox
-  if (!event.request.url.includes(self.location.origin)) {
-    return;
-  }
-
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then(networkResponse => {
-        if (!networkResponse || networkResponse.status !== 200) {
-          return networkResponse;
+// Fetch Event: Cache-First Strategy with Network Fallback
+self.addEventListener('fetch', (event) => {
+  // Only handle local same-origin requests (the dashboard shell)
+  if (event.request.url.startsWith(self.location.origin)) {
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        if (cachedResponse) {
+          // Serve from cache immediately for true instant/offline loading
+          return cachedResponse;
         }
-        const cacheClone = networkResponse.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, cacheClone));
-        return networkResponse;
-      });
-    })
-  );
+        return fetch(event.request);
+      })
+    );
+  }
 });
