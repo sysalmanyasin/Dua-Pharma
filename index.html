@@ -7,9 +7,9 @@
   
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="PharmaPlus Workspace">
+  <meta name="apple-mobile-web-app-title" content="Dua Pharma Workspace">
   
-  <title>Fazal Din's Pharma Plus — App Workspace</title>
+  <title>Dua Pharma Plus — Open Portal</title>
   
   <link rel="manifest" href="manifest.json">
   
@@ -57,22 +57,15 @@
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: var(--bg);
       color: var(--text-1);
-      height: 100vh;
+      min-height: 100vh;
       width: 100vw;
-      overflow: hidden;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       -webkit-font-smoothing: antialiased;
-      user-select: none;
     }
 
-    /* Allow text selection/copy inside the loaded apps (invoice numbers, etc.) */
-    .app-iframe {
-      user-select: auto;
-      -webkit-user-select: auto;
-    }
-
-    /* ── APP HEADER & TABS ── */
+    /* ── APP HEADER ── */
     header {
       background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 60%, var(--teal-lt) 100%);
       display: flex;
@@ -80,12 +73,11 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       z-index: 10;
       flex-shrink: 0;
-      /* Handles notch padding on iOS displays */
       padding-top: env(safe-area-inset-top, 0px);
     }
 
     .header-top {
-      padding: 16px 24px;
+      padding: 20px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -105,7 +97,7 @@
     }
 
     .brand-text h1 {
-      font-size: 18px; font-weight: 700; color: #fff;
+      font-size: 20px; font-weight: 700; color: #fff;
       letter-spacing: 0.3px; line-height: 1.2;
     }
 
@@ -117,54 +109,6 @@
     .header-right { text-align: right; }
     #clock { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; line-height: 1; }
     #dateline { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 5px; letter-spacing: 0.5px; }
-
-    /* ── TAB BAR ── */
-    .tab-bar {
-      display: flex;
-      gap: 4px;
-      padding: 0 16px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .tab-bar::-webkit-scrollbar { display: none; }
-
-    .tab {
-      background: rgba(0,0,0,0.15);
-      color: rgba(255,255,255,0.7);
-      padding: 10px 18px;
-      border-radius: 10px 10px 0 0;
-      font-size: 13.5px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-      border: 1px solid transparent;
-      border-bottom: none;
-    }
-
-    .tab:hover { background: rgba(255,255,255,0.1); color: #fff; }
-
-    .tab.active {
-      background: var(--bg);
-      color: var(--teal-dark);
-      border-color: var(--border);
-    }
-
-    @media (prefers-color-scheme: dark) {
-      .tab.active { color: #fff; }
-    }
-
-    .tab-close {
-      font-size: 16px; font-weight: normal;
-      margin-left: 6px; width: 20px; height: 20px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 50%; opacity: 0.6;
-    }
-    .tab-close:hover { background: rgba(0,0,0,0.1); opacity: 1; color: var(--offline); }
-    .tab.active .tab-close:hover { background: var(--border); }
 
     /* ── STATUS STRIP ── */
     .strip {
@@ -188,16 +132,7 @@
     /* ── WORKSPACE AREA ── */
     .workspace {
       flex: 1;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-    }
-
-    /* ── DASHBOARD VIEW ── */
-    #dashboard-view {
-      flex: 1;
-      overflow-y: auto;
-      padding: 32px 20px;
+      padding: 40px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -232,6 +167,7 @@
       display: flex; align-items: center; justify-content: center; gap: 10px;
       width: 100%; padding: 16px 0; border-radius: 12px; border: none;
       font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px;
+      text-decoration: none;
     }
     .launch-btn:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
     .launch-btn:active { filter: brightness(0.9); transform: translateY(0); box-shadow: none; }
@@ -243,164 +179,28 @@
     .card.audit .card-top-bar { background: var(--amber); } .card.audit .module-icon { background: var(--amber-faint); color: var(--amber); } .card.audit .module-label { color: var(--amber); } .card.audit .launch-btn { background: var(--amber); color: #fff; }
     .card.closing .card-top-bar { background: var(--green); } .card.closing .module-icon { background: var(--green-faint); color: var(--green); } .card.closing .module-label { color: var(--green); } .card.closing .launch-btn { background: var(--green); color: #fff; }
 
-    /* ── IFRAME VIEWS (THE APPS) ── */
-    .app-iframe {
-      display: none;
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: var(--bg);
-    }
-    .app-iframe.active {
-      display: block;
-    }
-
     /* ── FOOTER ── */
     footer { text-align: center; font-size: 12px; color: var(--text-3); margin-top: auto; padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));}
     footer strong { color: var(--text-2); }
 
-    /* ── TOAST ── */
-    #toast {
-      position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%);
-      background: var(--text-1); color: var(--bg); padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 600;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2); transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 100; pointer-events: none;
-    }
-    #toast.show { bottom: 30px; }
-
     @media (max-width: 600px) {
-      .header-top { padding: 12px 16px; }
+      .header-top { padding: 16px; }
       .brand-mark { width: 38px; height: 38px; font-size: 18px; }
-      .brand-text h1 { font-size: 16px; }
+      .brand-text h1 { font-size: 18px; }
       #clock { font-size: 16px; }
       .card-inner { flex-direction: column; gap: 14px; }
-      .tab { font-size: 12px; padding: 10px 14px; }
     }
-
-    /* ── APP MODE OVERRIDES (MINIMAL HEADER) ── */
-    body.app-mode .header-top,
-    body.app-mode .strip {
-      display: none !important;
-    }
-
-    body.app-mode .tab-bar {
-      /* Ensures tabs aren't cut off by mobile status bars/notches */
-      padding-top: calc(12px + env(safe-area-inset-top, 0px));
-      padding-bottom: 4px; /* Optional: gives a little breathing room below the tabs */
-    }
-
-    /* ── PIN GATE SPLASH ── */
-    #pin-gate {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 60%, var(--teal-lt) 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 28px;
-      padding: 24px;
-      text-align: center;
-    }
-    #pin-gate.hidden { display: none; }
-
-    .gate-logo {
-      width: 84px; height: 84px;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 20px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 42px;
-      backdrop-filter: blur(4px);
-      box-shadow: inset 0 2px 4px rgba(255,255,255,0.1);
-    }
-    .gate-title { color: #fff; font-size: 17px; font-weight: 700; letter-spacing: 0.3px; }
-    .gate-sub { color: rgba(255,255,255,0.65); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; margin-top: -16px; }
-
-    #pin-dots { display: flex; gap: 14px; }
-    .pin-dot {
-      width: 16px; height: 16px; border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.5);
-      background: transparent;
-      transition: background 0.15s, transform 0.15s;
-    }
-    .pin-dot.filled { background: #fff; transform: scale(1.1); }
-    .pin-dot.error { border-color: var(--offline); background: var(--offline); }
-
-    #pin-gate.shake #pin-dots { animation: shake 0.4s; }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-8px); }
-      40%, 80% { transform: translateX(8px); }
-    }
-
-    .pin-keypad {
-      display: grid;
-      grid-template-columns: repeat(3, 64px);
-      gap: 14px;
-    }
-    .pin-key {
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.25);
-      background: rgba(255,255,255,0.08);
-      color: #fff;
-      font-size: 22px; font-weight: 600;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
-      user-select: none;
-    }
-    .pin-key:active { background: rgba(255,255,255,0.25); transform: scale(0.95); }
-    .pin-key.empty { visibility: hidden; }
-
-    .gate-status {
-      min-height: 18px;
-      color: rgba(255,255,255,0.75);
-      font-size: 13px; font-weight: 600;
-    }
-    .gate-status.error-text { color: #ffd2cc; }
   </style>
 </head>
 <body>
-
-<!-- ── PIN GATE SPLASH ── -->
-<div id="pin-gate">
-  <div class="gate-logo">⚕</div>
-  <div>
-    <div class="gate-title">Fazal Din's Pharma Plus</div>
-    <div class="gate-sub">Staff Workspace</div>
-  </div>
-  <div id="pin-dots">
-    <div class="pin-dot"></div>
-    <div class="pin-dot"></div>
-    <div class="pin-dot"></div>
-    <div class="pin-dot"></div>
-  </div>
-  <div class="gate-status" id="gate-status">Enter PIN</div>
-  <div class="pin-keypad" id="pin-keypad">
-    <div class="pin-key" data-key="1">1</div>
-    <div class="pin-key" data-key="2">2</div>
-    <div class="pin-key" data-key="3">3</div>
-    <div class="pin-key" data-key="4">4</div>
-    <div class="pin-key" data-key="5">5</div>
-    <div class="pin-key" data-key="6">6</div>
-    <div class="pin-key" data-key="7">7</div>
-    <div class="pin-key" data-key="8">8</div>
-    <div class="pin-key" data-key="9">9</div>
-    <div class="pin-key empty"></div>
-    <div class="pin-key" data-key="0">0</div>
-    <div class="pin-key" data-key="del">⌫</div>
-  </div>
-</div>
 
 <header>
   <div class="header-top">
     <div class="brand">
       <div class="brand-mark">⚕</div>
       <div class="brand-text">
-        <h1>Fazal Din's Pharma Plus</h1>
-        <span>Bahria Town branch Staff Portal</span>
+        <h1>Dua Pharma Plus</h1>
+        <span>Open Portal for Pharmacy Staff</span>
       </div>
     </div>
     <div class="header-right">
@@ -408,209 +208,97 @@
       <div id="dateline">Loading…</div>
     </div>
   </div>
-  
-  <div class="tab-bar" id="tab-bar">
-    <div class="tab active" id="tab-dashboard" onclick="switchTab('dashboard')">
-      <span>🏠</span> Dashboard
-    </div>
-  </div>
 </header>
 
 <div class="strip">
-  <span id="greeting">Welcome to the Staff Workspace</span>
+  <span id="greeting">Active System Workspace</span>
   <div class="net-badge">
     <div class="net-dot" id="net-dot"></div>
     <span id="net-label">Connecting…</span>
   </div>
 </div>
 
-<div class="workspace" id="workspace">
-  
-  <main id="dashboard-view">
+<div class="workspace">
+  <main class="cards">
     <div class="section-label">Available Applications</div>
 
-    <div class="cards">
-      <div class="card pos">
-        <div class="card-top-bar"></div>
-        <div class="card-inner">
-          <div class="module-icon">🖥️</div>
-          <div class="card-content">
-            <div class="module-label">Billing · Sales</div>
-            <h2>POS Terminal</h2>
-            <p>Counter billing, sales transactions, and customer invoices. Runs in offline-first mode automatically.</p>
-          </div>
-        </div>
-        <div class="card-footer">
-          <div class="divider"></div>
-          <div class="status-row">
-            <div class="sys-dot checking" id="pos-dot"></div>
-            <span class="status-text" id="pos-status">Syncing local cache…</span>
-          </div>
-          <button class="launch-btn" data-id="pos" data-name="POS Terminal" data-icon="🖥️" data-url="https://pos.duapharma.com">
-            Launch POS App <span class="arrow">→</span>
-          </button>
+    <!-- POS CARD -->
+    <div class="card pos">
+      <div class="card-top-bar"></div>
+      <div class="card-inner">
+        <div class="module-icon">🖥️</div>
+        <div class="card-content">
+          <div class="module-label">Billing · Sales</div>
+          <h2>POS Terminal</h2>
+          <p>Counter billing, sales transactions, and customer invoices. Runs in offline-first mode automatically.</p>
         </div>
       </div>
-
-      <div class="card audit">
-        <div class="card-top-bar"></div>
-        <div class="card-inner">
-          <div class="module-icon">📦</div>
-          <div class="card-content">
-            <div class="module-label">Stock · Analytics</div>
-            <h2>Inventory Audit</h2>
-            <p>Stock verification and local IndexedDB audit logs. Changes sync automatically when online.</p>
-          </div>
+      <div class="card-footer">
+        <div class="divider"></div>
+        <div class="status-row">
+          <div class="sys-dot checking" id="pos-dot"></div>
+          <span class="status-text" id="pos-status">Syncing local cache…</span>
         </div>
-        <div class="card-footer">
-          <div class="divider"></div>
-          <div class="status-row">
-            <div class="sys-dot checking" id="audit-dot"></div>
-            <span class="status-text" id="audit-status">Syncing local cache…</span>
-          </div>
-          <button class="launch-btn" data-id="audit" data-name="Inventory Audit" data-icon="📦" data-url="https://random.duapharma.com">
-            Launch Audit App <span class="arrow">→</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="card closing">
-        <div class="card-top-bar"></div>
-        <div class="card-inner">
-          <div class="module-icon">🏦</div>
-          <div class="card-content">
-            <div class="module-label">Cash · EOD Reports</div>
-            <h2>Day Closing</h2>
-            <p>End-of-day cash reconciliation and branch handover reports. Saved securely to local device.</p>
-          </div>
-        </div>
-        <div class="card-footer">
-          <div class="divider"></div>
-          <div class="status-row">
-            <div class="sys-dot checking" id="closing-dot"></div>
-            <span class="status-text" id="closing-status">Syncing local cache…</span>
-          </div>
-          <button class="launch-btn" data-id="closing" data-name="Day Closing" data-icon="🏦" data-url="https://closing.duapharma.com">
-            Launch Closing App <span class="arrow">→</span>
-          </button>
-        </div>
+        <a href="https://pos.duapharma.com" target="_blank" rel="noopener" class="launch-btn">
+          Open POS App <span class="arrow">→</span>
+        </a>
       </div>
     </div>
 
-    <footer>
-      <strong>Fazal Din's Pharma Plus</strong> &mdash; Bahria Town branch Staff Portal &mdash; www.duapharma.com
-    </footer>
+    <!-- AUDIT CARD -->
+    <div class="card audit">
+      <div class="card-top-bar"></div>
+      <div class="card-inner">
+        <div class="module-icon">📦</div>
+        <div class="card-content">
+          <div class="module-label">Stock · Analytics</div>
+          <h2>Inventory Audit</h2>
+          <p>Stock verification and local IndexedDB audit logs. Changes sync automatically when online.</p>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="divider"></div>
+        <div class="status-row">
+          <div class="sys-dot checking" id="audit-dot"></div>
+          <span class="status-text" id="audit-status">Syncing local cache…</span>
+        </div>
+        <a href="https://random.duapharma.com" target="_blank" rel="noopener" class="launch-btn">
+          Open Audit App <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- CLOSING CARD -->
+    <div class="card closing">
+      <div class="card-top-bar"></div>
+      <div class="card-inner">
+        <div class="module-icon">🏦</div>
+        <div class="card-content">
+          <div class="module-label">Cash · EOD Reports</div>
+          <h2>Day Closing</h2>
+          <p>End-of-day cash reconciliation and branch handover reports. Saved securely to local device.</p>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="divider"></div>
+        <div class="status-row">
+          <div class="sys-dot checking" id="closing-dot"></div>
+          <span class="status-text" id="closing-status">Syncing local cache…</span>
+        </div>
+        <a href="https://closing.duapharma.com" target="_blank" rel="noopener" class="launch-btn">
+          Open Closing App <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
   </main>
+
+  <footer>
+    <strong>Dua Pharma Plus</strong> &mdash; Staff Portal &mdash; www.duapharma.com
+  </footer>
 </div>
 
-<div id="toast">Message here</div>
-
 <script>
-  /* ── BROWSER / TAB ENGINE ── */
-  const openApps = {};
-
-  document.querySelectorAll('.launch-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const appId = btn.getAttribute('data-id');
-      const appName = btn.getAttribute('data-name');
-      const appIcon = btn.getAttribute('data-icon');
-      const appUrl = btn.getAttribute('data-url');
-      
-      if (!navigator.onLine) {
-        showToast(`⚡ Opening ${appName} from local offline cache...`);
-      } else {
-        showToast(`🌐 Launching ${appName} within workspace...`);
-      }
-      
-      launchApp(appId, appName, appIcon, appUrl);
-    });
-  });
-
-  function launchApp(id, name, icon, url) {
-    const tabId = 'tab-' + id;
-    
-    if (openApps[tabId]) {
-      switchTab(tabId);
-      return;
-    }
-
-    // 1. Create Tab
-    const tab = document.createElement('div');
-    tab.className = 'tab';
-    tab.id = tabId + '-btn';
-    tab.innerHTML = `<span>${icon}</span> ${name} <span class="tab-close" onclick="closeApp(event, '${tabId}')">×</span>`;
-    tab.onclick = () => switchTab(tabId);
-    document.getElementById('tab-bar').appendChild(tab);
-
-    // 2. Create Sandbox Secure iFrame
-    const iframe = document.createElement('iframe');
-    iframe.className = 'app-iframe';
-    iframe.id = tabId + '-frame';
-    // Security enhancement: blocks parent frame hijacking, allows local scripts/storage execution
-    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
-    iframe.src = url;
-    document.getElementById('workspace').appendChild(iframe);
-
-    openApps[tabId] = true;
-    switchTab(tabId);
-  }
-
-  function switchTab(targetId) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.app-iframe').forEach(f => f.classList.remove('active'));
-    document.getElementById('dashboard-view').style.display = 'none';
-
-    if (targetId === 'dashboard') {
-      // 1. Remove app-mode to show the full header on the dashboard
-      document.body.classList.remove('app-mode');
-      
-      document.getElementById('tab-dashboard').classList.add('active');
-      document.getElementById('dashboard-view').style.display = 'flex';
-    } else {
-      // 2. Add app-mode to hide the header and strip when an app is open
-      document.body.classList.add('app-mode');
-      
-      document.getElementById(targetId + '-btn').classList.add('active');
-      document.getElementById(targetId + '-frame').classList.add('active');
-    }
-  }
-
-  function closeApp(event, tabId) {
-    event.stopPropagation();
-    
-    const frame = document.getElementById(tabId + '-frame');
-    if (frame) {
-      frame.src = 'about:blank'; // Free RAM allocation immediately
-      frame.remove();
-    }
-    
-    const btn = document.getElementById(tabId + '-btn');
-    if (btn) btn.remove();
-    
-    delete openApps[tabId];
-    switchTab('dashboard');
-  }
-
-  /* ── SEPARATE EXTERNAL SERVICE WORKER REGISTRATION ── */
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('Workspace Service Worker Online:', reg.scope))
-        .catch(err => console.error('PWA Core Initialization Failed:', err));
-    });
-  }
-
-  /* ── TOAST NOTIFICATION SYSTEM ── */
-  let toastTimeout;
-  function showToast(message) {
-    const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.classList.add('show');
-    clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
-  }
-
-  /* ── CLOCK & DATE ── */
+  /* ── CLOCK & DATE ENGINE ── */
   const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -620,12 +308,21 @@
     const mm = String(now.getMinutes()).padStart(2,'0');
     const ss = String(now.getSeconds()).padStart(2,'0');
     document.getElementById('clock').textContent = `${hh}:${mm}:${ss}`;
-    document.getElementById('dateline').textContent = `${DAYS[now.getDay()]} , ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+    document.getElementById('dateline').textContent = `${DAYS[now.getDay()]}, ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
   }
   tick();
   setInterval(tick, 1000);
 
-  /* ── NETWORK & REAL-TIME SYSTEM CHECKER ── */
+  /* ── CORE SERVICE WORKER FOR CENTRAL PORTAL ── */
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Portal Service Worker Active:', reg.scope))
+        .catch(err => console.error('Portal PWA Initialization Failed:', err));
+    });
+  }
+
+  /* ── NETWORK & REAL-TIME STATUS CHECKER ── */
   function updateNet() {
     const online = navigator.onLine;
     const dot = document.getElementById('net-dot');
@@ -650,7 +347,6 @@
     try {
       const ctrl = new AbortController();
       const timeout = setTimeout(() => ctrl.abort(), 4000);
-      // Appending request resource targets to prevent native wrapper caching confusion
       await fetch(`https://${host}/favicon.ico`, { method: 'GET', mode: 'no-cors', signal: ctrl.signal });
       clearTimeout(timeout);
       dot.className = 'sys-dot online'; label.textContent = '● Online & Synced'; label.className = 'status-text online';
@@ -666,120 +362,6 @@
   }
   setTimeout(checkAll, 500);
   setInterval(checkAll, 45000); 
-
-  /* ── PIN GATE ── */
-  (function() {
-    // SHA-256 hash of the staff PIN. To change the PIN, compute a new hash
-    // (e.g. in browser console: crypto.subtle.digest('SHA-256', new TextEncoder().encode('1234')))
-    // and replace the value below.
-    const PIN_HASH = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"; // default PIN: 1234
-
-    const UNLOCK_KEY = 'pharmaplus_unlocked';
-    const PIN_LENGTH = 4;
-    const MAX_ATTEMPTS = 3;
-    const COOLDOWN_SECONDS = 30;
-
-    const gate = document.getElementById('pin-gate');
-    const dots = document.querySelectorAll('.pin-dot');
-    const status = document.getElementById('gate-status');
-    const keypad = document.getElementById('pin-keypad');
-
-    let entered = '';
-    let attempts = 0;
-    let cooldownTimer = null;
-
-    // Already unlocked on this device
-    if (localStorage.getItem(UNLOCK_KEY) === 'true') {
-      gate.classList.add('hidden');
-      return;
-    }
-
-    async function sha256(text) {
-      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    function renderDots() {
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('filled', i < entered.length);
-        dot.classList.remove('error');
-      });
-    }
-
-    function setKeypadEnabled(enabled) {
-      keypad.style.pointerEvents = enabled ? 'auto' : 'none';
-      keypad.style.opacity = enabled ? '1' : '0.4';
-    }
-
-    function startCooldown() {
-      let remaining = COOLDOWN_SECONDS;
-      setKeypadEnabled(false);
-      status.classList.add('error-text');
-      status.textContent = `Too many attempts. Try again in ${remaining}s`;
-
-      cooldownTimer = setInterval(() => {
-        remaining--;
-        if (remaining <= 0) {
-          clearInterval(cooldownTimer);
-          cooldownTimer = null;
-          attempts = 0;
-          status.classList.remove('error-text');
-          status.textContent = 'Enter PIN';
-          setKeypadEnabled(true);
-        } else {
-          status.textContent = `Too many attempts. Try again in ${remaining}s`;
-        }
-      }, 1000);
-    }
-
-    async function checkPin() {
-      const hash = await sha256(entered);
-      if (hash === PIN_HASH) {
-        localStorage.setItem(UNLOCK_KEY, 'true');
-        gate.classList.add('hidden');
-      } else {
-        attempts++;
-        dots.forEach(dot => dot.classList.add('error'));
-        gate.classList.add('shake');
-        setTimeout(() => gate.classList.remove('shake'), 400);
-
-        if (attempts >= MAX_ATTEMPTS) {
-          entered = '';
-          renderDots();
-          startCooldown();
-        } else {
-          status.classList.add('error-text');
-          status.textContent = `Incorrect PIN (${MAX_ATTEMPTS - attempts} attempt${MAX_ATTEMPTS - attempts === 1 ? '' : 's'} left)`;
-          setTimeout(() => {
-            entered = '';
-            renderDots();
-            status.classList.remove('error-text');
-            status.textContent = 'Enter PIN';
-          }, 600);
-        }
-      }
-    }
-
-    keypad.addEventListener('click', (e) => {
-      const key = e.target.closest('.pin-key');
-      if (!key || key.classList.contains('empty')) return;
-      const val = key.getAttribute('data-key');
-
-      if (val === 'del') {
-        entered = entered.slice(0, -1);
-        renderDots();
-        return;
-      }
-
-      if (entered.length < PIN_LENGTH) {
-        entered += val;
-        renderDots();
-        if (entered.length === PIN_LENGTH) {
-          setTimeout(checkPin, 100);
-        }
-      }
-    });
-  })();
 </script>
 
 </body>
